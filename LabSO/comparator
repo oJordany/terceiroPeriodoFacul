@@ -1,0 +1,21 @@
+#!/bin/bash
+#  Zipando a pasta principal e gerando as chaves sha256sum de original.zip e copia.zip
+cd /var/www/html/ && zip -r /var/test/copia.zip ./* && cd /var
+checkOriginal=$(sha256sum /var/test/original.zip | awk '{print $1}')
+checkCopia=$(sha256sum /var/test/copia.zip | awk '{print $1}')
+# Comparando as duas chaves
+if [ $checkCopia = $checkOriginal ]
+then
+echo $checkCopia && echo $checkOriginal && echo IGUAL
+else
+echo $checkCopia && echo $checkOriginal && echo DIFERENTE
+# Reorganizando a pasta para voltar ao seu estado original
+rm -r /var/www/html/paginaDeCadastro
+unzip /var/test/original.zip -d /var/www/html/
+rm /var/test/original.zip
+cd /var/www/html/ && zip -r /var/test/original.zip ./* && zip -r /var/test/original.zip ./* && cd /var
+cd /var/www/html/ && zip -r /var/test/copia.zip ./* && cd /var
+sendemail -f jordanyluiz@outlook.com -t jordanyluiz@gmail.com -u "AVISO DE SEGURANÇA!" -m "Os arquivos do site foram modificados por alguma atividade suspeita. As correções já foram feitas automaticamente." -s smtp-mail.outlook.com:587 -xu jordanyluiz@outlook.com -xp Jordy123456789
+fi
+# Removendo o arquivo copia.zip que foi gerado para a comparação
+rm /var/test/copia.zip
