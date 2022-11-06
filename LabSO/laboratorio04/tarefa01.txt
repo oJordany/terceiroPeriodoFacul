@@ -1,0 +1,72 @@
+TAREAFA 01
+a) A CPU separa uma fatia de tempo para execução de processos. Caso o processo necessite de um
+tempo maior que essa fatia de tempo, o processo é retirado da CPU e colocado em que estado?
+R= Estado de espera (waiting)
+b) Em relação a fatia de tempo, qual o comportamento do programa anterior?
+R= Os processsos (PAI e FILHO) ficam alternando entre si e executando de forma concorrente, isto é o processo PAI usa a CPU durante uma determinada fatia de tempo e depois que essa fatia acaba ele entra em estado de espera, depois o processo FILHO é executado durante uma certa fatia de tempo até entrar em estado de espera e executar o processo PAI novamente. Dessa forma, esse ciclo se repete até que os dois processo sejam finalizados.
+c) Como fazer para que o programa anterior tenha um comportamento diferente do citado acima?
+Pode ser adicionado um semáforo para realizar a sincronização entre os dois processos (PARENT e CHILD). Dessa forma, o código ficaria da seguinte maneira:
+##################################################################################################
+
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <semaphore.h>
+#include <fcntl.h> // Definições dos valores das flags : 
+                   // O_CREAT (cria um semáforo caso não exista)
+                   // O_EXCL (retorna um erro caso já exista um semáforo com o nome passado)
+
+#define MAX_COUNT 200
+
+
+void ChildProcess(sem_t*);
+void ParentProcess(sem_t*);
+
+void main(void)
+{    
+    //                     Especifica as permissões necessárias
+    //                                   ↓   
+    // sem_open(nomeDoSemaforo, flags, modo, initialValue)
+    sem_t *mutex = sem_open("mutex", O_CREAT|O_EXCL, O_WRONLY| O_CREAT| O_RDONLY| O_TRUNC, 1);    
+    pid_t pid;
+
+    pid = fork();
+    if (pid == 0){
+        ChildProcess(mutex);
+    }else{
+        ParentProcess(mutex);
+    }
+
+    sem_unlink("mutex");
+    exit(0);
+}
+
+void ChildProcess(sem_t* mutex)
+{   
+    sem_wait(mutex); // decrementa o semáforo
+
+    int i;
+    for (i = 1; i <= MAX_COUNT; i++)
+        printf(" Processo FILHO, valor = %d\n", i);
+    printf(" *** Processo FILHO finalizado ***\n");
+
+    sem_post(mutex); // incrementa o semáforo
+}
+
+void ParentProcess(sem_t* mutex)
+{   
+    sem_wait(mutex); // decrementa o semáfor
+
+    int i;
+    for (i = 1; i <= MAX_COUNT; i++)
+        printf("Processo PAI, value = %d\n", i);
+    printf("*** Processo PAI finalizado ***\n");
+
+    sem_post(mutex); // incrementa o semáforo   
+}
+
+##################################################################################################
+
+d) Verifique o aumento de iterações que o programa deve fazer para que ele ocupe mais de uma vez a
+CPU.
