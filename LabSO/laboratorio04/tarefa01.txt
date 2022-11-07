@@ -70,3 +70,4 @@ void ParentProcess(sem_t* mutex)
 
 d) Verifique o aumento de iterações que o programa deve fazer para que ele ocupe mais de uma vez a
 CPU.
+De acordo com alguns testes manuais, o número máximo de iterações que o programa realiza sem fazer preempções entre os processos é de 32 iterações.
