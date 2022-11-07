@@ -74,9 +74,9 @@ void calculateFactorialOf(int number){
 }
 
 void fibonacciSequenceTo(int lastTerm){
-    long firstTerm = 1;
-    long nextTerm = 0;
-    long auxTerm = 0;
+    double firstTerm = 1;
+    double nextTerm = 0;
+    double auxTerm = 0;
     char buff[BUFF_SIZE] = "";
     char* pnt = buff;
     int bytesWritten;
@@ -85,7 +85,7 @@ void fibonacciSequenceTo(int lastTerm){
         auxTerm = nextTerm;
         nextTerm = auxTerm + firstTerm;
         firstTerm = auxTerm;
-        printf("[CHILD] T%d: %ld\n", i,nextTerm);
+        printf("[CHILD] T%d: %.0f\n", i,nextTerm);
     }
 
     printf("############## FINISHING CHILD ##############\n");
