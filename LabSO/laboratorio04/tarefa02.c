@@ -40,7 +40,6 @@ void main(void){
         exit(0);
     }
 
-    // hanoi();
     // exit(0);
 }
 
@@ -72,7 +71,6 @@ void calculateFactorialOf(int number){
     write(1, buff, strlen(buff));
     write(1,"############## FINISHING PARENT ##############\n", 47);
 
-    exit(0);
 }
 
 void fibonacciSequenceTo(int lastTerm){
