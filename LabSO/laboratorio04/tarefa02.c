@@ -9,7 +9,7 @@
 #define DISCS_NUMBER 6
 #define BUFF_SIZE 2024
 
-int calculateFactorialOf(int);
+void calculateFactorialOf(int);
 void fibonacciSequenceTo(int);
 void towerOfHanoi(int);
 void hanoi(void);
@@ -23,23 +23,28 @@ int towerC[DISCS_NUMBER];
 
 void main(void){
     pid_t pid;
+    pid_t pid2;
     
     pid = fork();
     if (pid == 0){
-        pid = fork();
-        if (pid == 0)
+        pid2 = fork();
+        if (pid2 == 0){
             hanoi();
-        else
+            exit(0);
+        }else{
             fibonacciSequenceTo(LAST_TERM);
+            exit(0);
+        }
     }else{
         calculateFactorialOf(FACTORIAL);
+        exit(0);
     }
 
     // hanoi();
-    exit(0);
+    // exit(0);
 }
 
-int calculateFactorialOf(int number){
+void calculateFactorialOf(int number){
     char buff[BUFF_SIZE] = "";
     char* pnt = buff;
     int bytesWritten;
@@ -67,7 +72,7 @@ int calculateFactorialOf(int number){
     write(1, buff, strlen(buff));
     write(1,"############## FINISHING PARENT ##############\n", 47);
 
-    return factorial;
+    exit(0);
 }
 
 void fibonacciSequenceTo(int lastTerm){
@@ -85,8 +90,9 @@ void fibonacciSequenceTo(int lastTerm){
         printf("[CHILD] T%d: %ld\n", i,nextTerm);
     }
 
-    write(1,"############## FINISHING CHILD ##############\n", 47);
-    write(1,"\n\n",2);
+    printf("############## FINISHING CHILD ##############\n");
+    printf("\n\n");
+    
 }
 
 void pushA(int disc){
@@ -200,4 +206,5 @@ void hanoi(){
         moveBC();
         show();
     }
+    printf("############## FINISHING GRANDCHILD ##############\n\n");
 }
