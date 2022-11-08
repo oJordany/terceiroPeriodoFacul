@@ -186,23 +186,27 @@ void show(){
 }
 
 void bootHanoi(){
-    for (int i = 6; i >= 1; i--){
+    for (int i = DISCS_NUMBER; i >= 1; i--){
         pushA(i);
     }
 }
 
 void hanoi(){
+    int amountOfMovements = 0;
     bootHanoi();
     show();
-    while(posC < 6){
+    while(posC < DISCS_NUMBER){
         moveAB();
+        amountOfMovements++;
         show();
-        if (posC == 6) break;
+        if (posC == DISCS_NUMBER) break;
         moveAC();
+        amountOfMovements++;
         show();
-        if (posC == 6) break;
+        if (posC == DISCS_NUMBER) break;
         moveBC();
+        amountOfMovements++;
         show();
     }
-    printf("############## FINISHING GRANDCHILD ##############\n\n");
+    printf("AMOUNT OF MOVEMENTS: %d\n############## FINISHING GRANDCHILD ##############\n\n", amountOfMovements);
 }
