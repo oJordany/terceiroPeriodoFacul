@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .metadataFieldValue{
+            border: 1px solid;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <td class="metadataFieldValue">teste1</td class="metadataFieldValue">
+                <td class="metadataFieldValue">teste2</td class="metadataFieldValue">
+                <td class="metadataFieldValue">teste3</td class="metadataFieldValue">
+                <td class="metadataFieldValue">teste4</td class="metadataFieldValue">
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="metadataFieldValue">teste1</td class="metadataFieldValue">
+                <td class="metadataFieldValue">teste2</td class="metadataFieldValue">
+                <td class="metadataFieldValue" colspan="2"><a href="#">TESTE</a><br><a href="#">TESTE</a><br><a href="#">TESTE</a><br><a href="#">TEsTe15</a><br><a href="#">TEsTe</a><br><a href="#">TESTE</a><br></td class="metadataFieldValue">
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    var collections = document.getElementsByClassName("metadataFieldValue")
+    collections = Array.from(collections)[collections.length - 1].childNodes
+    collections = Array.from(collections)
+    console.log(collections)
+    collections = collections.filter(collection => !(collections.indexOf(collection) % 2))
+    var collectionsName = collections.map(collection => collection.innerText)
+    console.log(collectionsName)
+    collectionsName.forEach((collectionName, index, collectionsName) => {
+                        if (collectionsName.includes(collectionName) && 
+                            collectionsName.indexOf(collectionName) != index){
+                                collections[index].nextElementSibling.remove()
+                                collections[index].remove()
+                            }
+                    })                  
+</script>
