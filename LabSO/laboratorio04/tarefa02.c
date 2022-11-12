@@ -4,7 +4,7 @@
 #include <string.h>
 #include <sys/types.h>
 
-#define FACTORIAL 19
+#define FACTORIAL 30
 #define LAST_TERM 100
 #define DISCS_NUMBER 6
 #define BUFF_SIZE 2024
@@ -47,7 +47,7 @@ void calculateFactorialOf(int number){
     char buff[BUFF_SIZE] = "";
     char* pnt = buff;
     int bytesWritten;
-    long factorial = 1;
+    double factorial = 1;
 
     for (int i = number; i > 0; i--){
         factorial *= i; 
@@ -61,13 +61,13 @@ void calculateFactorialOf(int number){
         }
 
         write(1, buff, strlen(buff));
-        printf("[PARENT] CURRENT VALUE: %ld\n", factorial);
+        printf("[PARENT] CURRENT VALUE: %.0f\n", factorial);
         strcpy(&pnt[strlen(buff)-1],"\0");
         strcpy(&pnt[strlen(buff)-1],"\0");
         bytesWritten -= 2;
     }
 
-    bytesWritten += sprintf(buff+bytesWritten, " = %ld\n", factorial);
+    bytesWritten += sprintf(buff+bytesWritten, " = %.0f\n", factorial);
     write(1, buff, strlen(buff));
     write(1,"############## FINISHING PARENT ##############\n", 47);
 
