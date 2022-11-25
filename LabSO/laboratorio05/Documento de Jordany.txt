@@ -1,0 +1,6 @@
+» Comportamento observado ao executar o comando renice +10 -p 5 
+    → O NI foi modificado para 10, isto é, a sua prioridade fica menor em relação aos outros processos. Portanto, a atividade realizada por esse processo pode ficar um pouco mais lenta
+    → O NI foi modificado para -10, isto é, a sua prioridade fica maior em relação aos outros processos. Portanto, a atividade realizada por esse processo pode ficar um pouco mais rápida 
+
+» Comportamento observado ao executar o comando nice -20 apt-get upgrade
+    → O NI foi modificado para 19, uma vez que o valor máximo suportado vai apenas até 19. Nesse caso, o hífen (-) indica uma flag e não o valor do número negativo, para que que seja fornecido um valor negativo, é necessário passar dois hífens (--): um da flag e o outro é o sinal. Nesse caso, a prioridade do processo em questão (apt-get) fez com que ele ficasse mais lento, visto que para valores positivos, temos prioridades menores de execução.
