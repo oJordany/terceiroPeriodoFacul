@@ -1,5 +1,7 @@
-» Comportamento observado ao executar o comando renice +10 -p 5 
+» Comportamento observado ao executar o comando renice +10 -p 5: 
     → O NI foi modificado para 10, isto é, a sua prioridade fica menor em relação aos outros processos. Portanto, a atividade realizada por esse processo pode ficar um pouco mais lenta
+
+» COmportamento observado ao executar o comando renice -10 -p 5:
     → O NI foi modificado para -10, isto é, a sua prioridade fica maior em relação aos outros processos. Portanto, a atividade realizada por esse processo pode ficar um pouco mais rápida 
 
 » Comportamento observado ao executar o comando nice -20 apt-get upgrade
