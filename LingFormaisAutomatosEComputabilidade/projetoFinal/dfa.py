@@ -1,31 +1,48 @@
-class DFA:
+import string
+import copy
 
-    def __init__(self,  alphabet, states, transitionFunction,initialState, finalState):
+class DFA:
+    def __init__(self, alphabet:set, states:set, initialState:str, finalState:str):
         self.alphabet = alphabet
         self.states = states
-        self.transitionFunction = transitionFunction
         self.initialState = initialState
-        self.finalState = finalState
+        self.finalState = finalState 
+
+    def setTransitionFunction(self, transitions:dict):
+        pass
 
     def run(self, string):
-        __primitiveTypes = ["int", "char", "bool", "float", "double"]
+        pass
 
-        __I = [
-            "a","b","c","d","e","f","g",'h',"i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
-            "A","B","C","D","E","F","G",'H',"I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
-            "_"
-        ]
 
-        __M = [
-            "a","b","c","d","e","f","g",'h',"i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
-            "A","B","C","D","E","F","G",'H',"I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
-            "_","0","1","2","3","4","5","6","7","8","9"
-        ]
+I = {*(string.ascii_letters + "_")}
+M = {*(string.ascii_letters + string.digits + "_")}
+MDI = M.difference(I)
+IUM = I.union(M)
 
-        string
+dfa = DFA(
+    alphabet=IUM,
+    states={"q0", "q1", "qf"},
+    initialState="q0",
+    finalState="qf"
+    )
 
-{
-    "q0": {[]: ""},
-    "q1": {},
-    "q2": {}
-}
+transitions = {}
+
+transitions["q0"] = {
+                    symbol: "q1" if not symbol.isdigit() and symbol != "," and symbol != ";" 
+                    else None 
+                    for symbol in M.union({",", ";"}) 
+                    }
+
+transitions["q1"] = {
+                    symbol: "q1" if symbol != "," and symbol != ";" 
+                    else "q0" if symbol == "," 
+                    else "qf"
+                    for symbol in M.union({",", ";"})
+                    }
+
+transitions["qf"] = {
+                    symbol: None
+                    for symbol in M.union({",", ";"})
+                    }

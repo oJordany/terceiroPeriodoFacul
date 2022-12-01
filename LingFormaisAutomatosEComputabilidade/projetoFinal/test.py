@@ -1,5 +1,10 @@
-obj = {
-    ["teste"]: "t1"
-}
+import string
+lista = {"a","b","c","d","e"}
 
-print(obj)
+conjunto = {"c","l","f", "d", "g", "h", "1", "4"}
+
+LUC = lista.union(conjunto)
+
+dif = LUC.difference(lista)
+
+print(set(sorted(conjunto)))
