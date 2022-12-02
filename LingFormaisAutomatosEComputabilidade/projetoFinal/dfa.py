@@ -31,24 +31,26 @@ class DFA:
         if type(entryData) == dict:
             for index, character in enumerate(entryData["variablesName"]):
                 try:
-                    print(f"{__currentState} --- {character} --->", end=" ")
+                    # print(f"{__currentState} --- {character} --->", end=" ")
                     __currentState = self.transitions[__currentState][character]  
-                    print(__currentState)  
+                    # print(__currentState)  
                 except KeyError as err:
                     print("\n")
                     if not err.args[0]:
-                        print(f"o caracter '{entryData['variablesName'][index - 1]}' não pertence ao alfabeto")
+                        print(f"\033[1;31mo caracter '{entryData['variablesName'][index - 1]}' não pertence ao alfabeto\033[m")
                     else:
-                        print(f"o caracter '{character}' não pertence ao alfabeto")
+                        print(f"\033[1;31mo caracter '{character}' não pertence ao alfabeto\033[m")
 
                     break
             
             if __currentState == self.finalState:
-                print("palavra aceita")
+                entryData["variablesName"] = re.sub(";", "", entryData["variablesName"])
+                print("\033[1;32mpalavra aceita\033[m")
+                print(f"Tipo primitivo: {entryData['primitiveType']}\nVariáveis: {entryData['variablesName'].split(',')}")
             else:
-                print("palavra recusada")
+                print("\033[1;31mpalavra recusada\033[m")
         else:
-            print(f'\033[1m{entryData}\033[m')
+            print(f'\033[1;31m{entryData}\033[m')
 
 
 I = {*(string.ascii_letters + "_")}
@@ -84,7 +86,5 @@ dfa = DFA(
     finalState="qf"
     )
 
-dfa.run("int    testeDiferenciado,    teste     ;")
-# datas = dfa.splitEntryData("int    testeDi ferenciado,   teste  ;")
-# print(datas["primitiveType"], len(datas["primitiveType"]))
-# print(datas["variablesName"], len(datas["variablesName"]))
+declaration = input()
+dfa.run(declaration)
