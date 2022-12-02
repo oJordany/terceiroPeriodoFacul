@@ -8,13 +8,19 @@ class DFA:
         self.initialState = initialState
         self.finalState = finalState 
 
-    def setTransitionFunction(self, transitions:dict):
-        pass
+    def splitEntryData(self, string:str):
+        __primitiveType = string.split(" ", 1)[0]
+        __variablesName = string.split(" ", 1)[1]
+        __variablesName = ",".join([variable.strip() for variable in __variablesName.split(",")])
+        return {"primitiveType": __primitiveType, "variablesName": __variablesName}
+        
 
     def run(self, string:str):
         __currentState = self.initialState
 
-        for index, character in enumerate(string):
+        entryData = self.splitEntryData(string)
+
+        for index, character in enumerate(entryData["variablesName"]):
             try:
                 print(f"{__currentState} --- {character} --->", end=" ")
                 __currentState = self.transitions[__currentState][character]  
@@ -22,7 +28,7 @@ class DFA:
             except KeyError as err:
                 print("\n")
                 if not err.args[0]:
-                    print(f"o caracter '{string[index - 1]}' não pertence ao alfabeto")
+                    print(f"o caracter '{entryData["variablesName"][index - 1]}' não pertence ao alfabeto")
                 else:
                     print(f"o caracter '{character}' não pertence ao alfabeto")
                 break
@@ -70,4 +76,5 @@ dfa = DFA(
     finalState="qf"
     )
 
-dfa.run("testeDiferenciado, teste;")
+# dfa.run("testeDiferenciado, teste;")
+dfa.splitEntryData("int testeDiferenciado, teste;")
