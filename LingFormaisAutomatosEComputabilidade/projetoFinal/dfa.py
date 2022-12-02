@@ -1,4 +1,5 @@
 import string
+import re
 
 class DFA:
     def __init__(self, alphabet:set, states:set, transitions:dict,initialState:str, finalState:str):
@@ -9,10 +10,17 @@ class DFA:
         self.finalState = finalState 
 
     def splitEntryData(self, string:str):
+        __allowedTypes = ["int", "char", "bool", "float", "double"]
         __primitiveType = string.split(" ", 1)[0]
-        __variablesName = string.split(" ", 1)[1]
-        __variablesName = ",".join([variable.strip() for variable in __variablesName.split(",")])
-        return {"primitiveType": __primitiveType, "variablesName": __variablesName}
+
+        if __primitiveType in __allowedTypes:
+            __variablesName = string.split(" ", 1)[1]
+            __variablesList = [variable.strip() for variable in __variablesName.split(",")]
+            __variablesList[-1] = re.sub(r"\s+;", ";", __variablesList[-1])
+            __variablesName = ",".join(__variablesList)
+            return {"primitiveType": __primitiveType, "variablesName": __variablesName}
+        else:
+            return f"Erro de Declaração de Tipo: {__primitiveType}"
         
 
     def run(self, string:str):
@@ -20,33 +28,33 @@ class DFA:
 
         entryData = self.splitEntryData(string)
 
-        for index, character in enumerate(entryData["variablesName"]):
-            try:
-                print(f"{__currentState} --- {character} --->", end=" ")
-                __currentState = self.transitions[__currentState][character]  
-                print(__currentState)  
-            except KeyError as err:
-                print("\n")
-                if not err.args[0]:
-                    print(f"o caracter '{entryData["variablesName"][index - 1]}' não pertence ao alfabeto")
-                else:
-                    print(f"o caracter '{character}' não pertence ao alfabeto")
-                break
-        
-        if __currentState == self.finalState:
-            print("palavra aceita")
+        if type(entryData) == dict:
+            for index, character in enumerate(entryData["variablesName"]):
+                try:
+                    print(f"{__currentState} --- {character} --->", end=" ")
+                    __currentState = self.transitions[__currentState][character]  
+                    print(__currentState)  
+                except KeyError as err:
+                    print("\n")
+                    if not err.args[0]:
+                        print(f"o caracter '{entryData['variablesName'][index - 1]}' não pertence ao alfabeto")
+                    else:
+                        print(f"o caracter '{character}' não pertence ao alfabeto")
+
+                    break
+            
+            if __currentState == self.finalState:
+                print("palavra aceita")
+            else:
+                print("palavra recusada")
         else:
-            print("palavra recusada, pois não atinge o estado final")
+            print(f'\033[1m{entryData}\033[m')
 
 
 I = {*(string.ascii_letters + "_")}
 M = {*(string.ascii_letters + string.digits + "_")}
 MDI = M.difference(I)
 IUM = I.union(M)
-
-print(I)
-print(M)
-print(MDI)
 
 transitions = {}
 
@@ -76,5 +84,7 @@ dfa = DFA(
     finalState="qf"
     )
 
-# dfa.run("testeDiferenciado, teste;")
-dfa.splitEntryData("int testeDiferenciado, teste;")
+dfa.run("int    testeDiferenciado,    teste     ;")
+# datas = dfa.splitEntryData("int    testeDi ferenciado,   teste  ;")
+# print(datas["primitiveType"], len(datas["primitiveType"]))
+# print(datas["variablesName"], len(datas["variablesName"]))
