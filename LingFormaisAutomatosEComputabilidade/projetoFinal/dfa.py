@@ -12,7 +12,6 @@ class DFA:
     def splitEntryData(self, string:str):
         __allowedTypes = ["int", "char", "bool", "float", "double"]
         __primitiveType = string.split(" ", 1)[0]
-
         if __primitiveType in __allowedTypes:
             __variablesName = string.split(" ", 1)[1]
             __variablesList = [variable.strip() for variable in __variablesName.split(",")]
@@ -53,6 +52,27 @@ class DFA:
             print(f'\033[1;31m{entryData}\033[m')
 
 
+"""
+MONTANDO A ESTRUTURA DA FUNÇÃO DE TRANSIÇÃO
+
+transitions = {
+    "q0":{
+        "a": "q1", "b": "q1", ... ,"z": "q1", "A": "q1", "B": "q1", ... ,"Z": "q1", "_": "q1"
+        },
+
+    "q1":{
+        "a": "q1", "b": "q1", ... ,"z": "q1", "A": "q1", "B": "q1", ... ,"Z": "q1", "_": "q1", 
+        "0":"q1", "1": "q1", ... ,"9":"q1", ",": "q0", ";":"qf"
+        },
+
+    "qf":{
+        "a": None, "b": None, ... ,"z": None, "A": None, "B": None, ... ,"Z": None, "_": None,
+        "0": None, "1": None, ... ,"9": None, ",": None, ";": None
+        }
+    }
+"""
+
+
 I = {*(string.ascii_letters + "_")}
 M = {*(string.ascii_letters + string.digits + "_")}
 MDI = M.difference(I)
@@ -78,6 +98,7 @@ transitions["qf"] = {
                     for symbol in M.union({",", ";"})
                     }
 
+# CRIANDO O AUTÔMATO
 dfa = DFA(
     alphabet=IUM,
     states={"q0", "q1", "qf"},
