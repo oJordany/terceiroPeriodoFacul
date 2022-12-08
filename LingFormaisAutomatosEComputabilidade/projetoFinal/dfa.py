@@ -1,6 +1,8 @@
 import string
 import re
 
+import re
+
 class DFA:
     def __init__(self, alphabet:set, states:set, transitions:dict,initialState:str, finalState:str):
         self.alphabet = alphabet
@@ -25,29 +27,43 @@ class DFA:
     def run(self, string:str):
         __currentState = self.initialState
 
-        entryData = self.splitEntryData(string)
+        entryData = self.splitEntryData(string) 
 
         if type(entryData) == dict:
             for index, character in enumerate(entryData["variablesName"]):
                 try:
                     # print(f"{__currentState} --- {character} --->", end=" ")
-                    __currentState = self.transitions[__currentState][character]  
+                    __currentState = self.transitions[__currentState][character]
+                    if __currentState == self.finalState:
+                      break
                     # print(__currentState)  
                 except KeyError as err:
-                    print("\n")
-                    if not err.args[0]:
-                        print(f"\033[1;31mo caracter '{entryData['variablesName'][index - 1]}' não pertence ao alfabeto\033[m")
-                    else:
-                        print(f"\033[1;31mo caracter '{character}' não pertence ao alfabeto\033[m")
-
+                    # if not err.args[0]:
+                    #     print(f"\033[1;31mprocessamento não faz parte da função de transição\033[m")
+                    # else:
+                    #     print(f"\033[1;31mo caracter '{character}' não pertence ao alfabeto\033[m")
                     break
+            try:
+              flag = True
+              finalCharacterIndex = entryData["variablesName"].index(";")
+              variablesName = entryData["variablesName"][0:finalCharacterIndex]
+              reservedWord = True
+              for variable in variablesName.split(","):
+                if variable in ["int", "char", "bool", "float", "double"]:
+                  reservedWord = False
+                  break
+            except:
+              flag = False
             
-            if __currentState == self.finalState:
-                entryData["variablesName"] = re.sub(";", "", entryData["variablesName"])
+                              
+            if __currentState == self.finalState and reservedWord and flag:
                 print("\033[1;32mpalavra aceita\033[m")
-                print(f"Tipo primitivo: {entryData['primitiveType']}\nVariáveis: {entryData['variablesName'].split(',')}")
+                print(f"Tipo primitivo: {entryData['primitiveType']}\nVariáveis: {variablesName.split(',')}")
+                nextDeclaration = entryData["variablesName"][finalCharacterIndex+1:]
+                self.run(nextDeclaration.lstrip()) if nextDeclaration else print("\n")
+               
             else:
-                print("\033[1;31mpalavra recusada\033[m")
+                print("\033[1;31mpalavra recusada\033[m\n")
         else:
             print(f'\033[1;31m{entryData}\033[m')
 
