@@ -4,8 +4,8 @@ int main()
 {
   float a[25][25], b[25][25], k, d;
   int i, j;
-  float **inverseA;
-  float **inverseB;
+  inverseMatrix inverseA;
+  inverseMatrix inverseB;
 
   printf("Enter the order of the Matrices '': ");
   scanf("%f", &k);
@@ -36,7 +36,7 @@ int main()
     {
       for (j = 0; j < k; j++)
       {
-        printf("\t%.2f", inverseA[i][j]);
+        printf("\t%.2f", inverseA.matrix[i][j]);
       }
       printf("\n");
     }
@@ -48,18 +48,10 @@ int main()
     {
       for (j = 0; j < k; j++)
       {
-        printf("\t%.2f", inverseB[i][j]);
+        printf("\t%.2f", inverseB.matrix[i][j]);
       }
       printf("\n");
     }
-    printf("\n\n\nThe inverse of matrix A is : \n");
-    for (i = 0; i < k; i++)
-    {
-      for (j = 0; j < k; j++)
-      {
-        printf("\t%.2f", inverseA[i][j]);
-      }
-      printf("\n");
-    }
+    multiplication(inverseA, inverseB, k);
   }
 }
