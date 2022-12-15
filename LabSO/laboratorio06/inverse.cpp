@@ -4,9 +4,14 @@
 #include <stdlib.h>
 using namespace std;
 
+typedef struct
+{
+  float matrix[25][25];
+} inverseMatrix;
+
 float determinant(float[][25], float);
-float** cofactor(float[][25], float);
-float** transpose(float[][25], float[][25], float);
+inverseMatrix cofactor(float[][25], float);
+inverseMatrix transpose(float[][25], float[][25], float);
 int multiplication(float[25][25], float[25][25], float);
 
 /*For calculating Determinant of the Matrix */
@@ -51,11 +56,11 @@ float determinant(float a[25][25], float k)
   return (det);
 }
 
-float** cofactor(float num[25][25], float f)
+inverseMatrix cofactor(float num[25][25], float f)
 {
-  float b[25][25], fac[25][25];
+  float b[25][25], fac[25][25], aux[25][25];
   int p, q, m, n, i, j;
-  float **inv;
+  inverseMatrix inv;
   for (q = 0; q < f; q++)
   {
     for (p = 0; p < f; p++)
@@ -93,15 +98,17 @@ float** cofactor(float num[25][25], float f)
   //   }
   //   printf("\n");
   // }
+  
   return inv;
 }
 
 /*Finding transpose of matrix*/
-float** transpose(float num[25][25], float fac[25][25], float r)
+inverseMatrix transpose(float num[25][25], float fac[25][25], float r)
 {
+ 
   int i, j;
   float b[25][25], inverse[25][25], d;
-  float **pointer;
+  inverseMatrix inv;
 
   for (i = 0; i < r; i++)
   {
@@ -129,15 +136,16 @@ float** transpose(float num[25][25], float fac[25][25], float r)
   //   }
   //   printf("\n");
   // }
-  pointer = (float**)malloc(r * sizeof(float));
   for (int i = 0; i < r; i++){
-    pointer[i] = inverse[i];
+    for (int j = 0; j < r; j++){
+      inv.matrix[i][j] = inverse[i][j];
+    }
   }
 
-  return pointer;
+  return inv;
 }
 
-int multiplication(float matrixA[25][25], float matrixB[25][25], float ki)
+int multiplication(inverseMatrix matrixA, inverseMatrix matrixB, float ki)
 {
   float mult[25][25];
   int r1, c1, r2, c2, i, j, k;
@@ -161,7 +169,7 @@ int multiplication(float matrixA[25][25], float matrixB[25][25], float ki)
     {
       for (k = 0; k < c1; ++k)
       {
-        mult[i][j] += matrixA[i][k] * matrixB[k][j];
+        mult[i][j] += matrixA.matrix[i][k] * matrixB.matrix[k][j];
       }
     }
   }
