@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 float determinant(float[][25], float);
-void cofactor(float[][25], float);
-void transpose(float[][25], float[][25], float);
+float** cofactor(float[][25], float);
+float** transpose(float[][25], float[][25], float);
 int multiplication(float[25][25], float[25][25], float);
 
 /*For calculating Determinant of the Matrix */
@@ -50,10 +51,11 @@ float determinant(float a[25][25], float k)
   return (det);
 }
 
-void cofactor(float num[25][25], float f)
+float** cofactor(float num[25][25], float f)
 {
   float b[25][25], fac[25][25];
   int p, q, m, n, i, j;
+  float **inv;
   for (q = 0; q < f; q++)
   {
     for (p = 0; p < f; p++)
@@ -80,14 +82,26 @@ void cofactor(float num[25][25], float f)
       fac[q][p] = pow(-1, q + p) * determinant(b, f - 1);
     }
   }
-  transpose(num, fac, f);
+  inv = transpose(num, fac, f);
+  // printf("\n\n\nThe inverse of matrix is : \n");
+  // 
+  // for (i = 0; i < f; i++)
+  // {
+  //   for (j = 0; j < f; j++)
+  //   {
+  //     printf("\t%.2f", inv[i][j]);
+  //   }
+  //   printf("\n");
+  // }
+  return inv;
 }
 
 /*Finding transpose of matrix*/
-void transpose(float num[25][25], float fac[25][25], float r)
+float** transpose(float num[25][25], float fac[25][25], float r)
 {
   int i, j;
   float b[25][25], inverse[25][25], d;
+  float **pointer;
 
   for (i = 0; i < r; i++)
   {
@@ -105,22 +119,28 @@ void transpose(float num[25][25], float fac[25][25], float r)
     }
   }
   
-  multiplication(inverse, inverse, 2);
-  printf("\n\n\nThe inverse of matrix is : \n");
+  // printf("\n\n\nThe inverse of matrix is : \n");
 
-  for (i = 0; i < r; i++)
-  {
-    for (j = 0; j < r; j++)
-    {
-      printf("\t%.2f", inverse[i][j]);
-    }
-    printf("\n");
+  // for (i = 0; i < r; i++)
+  // {
+  //   for (j = 0; j < r; j++)
+  //   {
+  //     printf("\t%.2f", inverse[i][j]);
+  //   }
+  //   printf("\n");
+  // }
+  pointer = (float**)malloc(r * sizeof(float));
+  for (int i = 0; i < r; i++){
+    pointer[i] = inverse[i];
   }
+
+  return pointer;
 }
 
 int multiplication(float matrixA[25][25], float matrixB[25][25], float ki)
 {
-  int a[10][10], b[10][10], mult[10][10], r1, c1, r2, c2, i, j, k;
+  float mult[25][25];
+  int r1, c1, r2, c2, i, j, k;
   r1 = 2;
   c1 = 2;
   r2 = 2;
@@ -141,21 +161,21 @@ int multiplication(float matrixA[25][25], float matrixB[25][25], float ki)
     {
       for (k = 0; k < c1; ++k)
       {
-        cout << matrixA[i][k];
         mult[i][j] += matrixA[i][k] * matrixB[k][j];
       }
     }
   }
   // Displaying the multiplication of two matrix.
-  cout << endl
-       << "Output Matrix: " << endl;
+  printf("\n");
+  printf("Output Matrix: \n");
+
   for (i = 0; i < r1; ++i)
   {
     for (j = 0; j < c2; ++j)
     {
-      cout << " " << mult[i][j];
+      printf("\t%.2f",mult[i][j]);
       if (j == c2 - 1)
-        cout << endl;
+        printf("\n");
     }
   }
 
