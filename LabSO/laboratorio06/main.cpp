@@ -1,11 +1,19 @@
 #include "inverse.cpp"
+#include <unistd.h>
+
+#define BUFSIZE 80
 
 int main()
 {
   float a[25][25], b[25][25], k, d;
-  int i, j;
+  int i, j, fd[2];
+
   inverseMatrix inverseA;
   inverseMatrix inverseB;
+
+  float aux[25][25];
+
+  pipe(fd); /* fd[0] - leitura, fd[1] - escrita */
 
   printf("Enter the order of the Matrices '': ");
   scanf("%f", &k);
@@ -25,33 +33,31 @@ int main()
       scanf("%f", &b[i][j]);
     }
   }
-  d = determinant(a, k);
-  if (d == 0)
-    printf("\nInverse of Entered Matrix is not possible\n");
+  if (fork() == 0)
+  {
+    close(fd[0]);
+
+    d = determinant(b, k);
+    if (d == 0)
+      printf("\nInverse of Entered Matrix is not possible\n");
+    else
+    {
+      inverseB = cofactor(b, k);
+      write(fd[1], inverseB.matrix, sizeof(aux));
+    }
+  }
   else
   {
-    inverseA = cofactor(a, k);
-    printf("\n\n\nThe inverse of matrix A is : \n");
-    for (i = 0; i < k; i++)
-    {
-      for (j = 0; j < k; j++)
-      {
-        printf("\t%.2f", inverseA.matrix[i][j]);
-      }
-      printf("\n");
-    }
-    inverseB = cofactor(b, k);
+    close(fd[1]);
 
-    printf("\n\n\nThe inverse of matrix B is : \n");
-
-    for (i = 0; i < k; i++)
+    d = determinant(a, k);
+    if (d == 0)
+      printf("\nInverse of Entered Matrix is not possible\n");
+    else
     {
-      for (j = 0; j < k; j++)
-      {
-        printf("\t%.2f", inverseB.matrix[i][j]);
-      }
-      printf("\n");
+      inverseA = cofactor(a, k);
+      read(fd[0], aux, sizeof(aux));
+      multiplication(inverseA.matrix, aux, k);
     }
-    multiplication(inverseA, inverseB, k);
   }
 }

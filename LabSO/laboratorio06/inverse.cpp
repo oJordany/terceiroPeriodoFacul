@@ -145,14 +145,15 @@ inverseMatrix transpose(float num[25][25], float fac[25][25], float r)
   return inv;
 }
 
-int multiplication(inverseMatrix matrixA, inverseMatrix matrixB, float ki)
+int multiplication(float matrixA[25][25], float matrixB[25][25], float ki)
 {
   float mult[25][25];
-  int r1, c1, r2, c2, i, j, k;
-  r1 = 2;
-  c1 = 2;
-  r2 = 2;
-  c2 = 2;
+  float r1, c1, r2, c2;
+  int i, j, k;
+  r1 = ki;
+  c1 = ki;
+  r2 = ki;
+  c2 = ki;
   // Initializing elements of matrix mult to 0.
   for (i = 0; i < r1; ++i)
   {
@@ -169,7 +170,7 @@ int multiplication(inverseMatrix matrixA, inverseMatrix matrixB, float ki)
     {
       for (k = 0; k < c1; ++k)
       {
-        mult[i][j] += matrixA.matrix[i][k] * matrixB.matrix[k][j];
+        mult[i][j] += matrixA[i][k] * matrixB[k][j];
       }
     }
   }
